@@ -7,9 +7,6 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.github.nestorm001.disabler.disablePackage
-import com.github.nestorm001.disabler.enablePackage
-import com.github.nestorm001.disabler.openApp
 import kotlinx.android.synthetic.main.item_package_info.view.*
 
 /**
@@ -39,7 +36,13 @@ class PackageAdapter(val context: Context, val list: List<ApplicationInfo>)
                     enablePackage(info.packageName)
                 }
             }
-            setOnClickListener { openApp(context, info.packageName) }
+            setOnClickListener {
+                if (info.enabled) {
+                    context.openApp(info.packageName)
+                } else {
+                    context.toast("To launch the application, you should enable the application first")
+                }
+            }
         }
     }
 
