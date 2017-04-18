@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white"
+    android:fitsSystemWindows="true"
+    tools:context="com.github.nestorm001.disabler.MainActivity">
+
+    <TextView
+        android:id="@+id/showType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/half_padding"
+        android:layout_marginLeft="@dimen/padding"
+        android:layout_marginTop="@dimen/padding"
+        android:text="Package Info"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/half_padding"
+        android:layout_marginRight="@dimen/padding"
+        android:layout_marginTop="@dimen/padding"
+        android:text="Disable"
+        app:layout_constraintRight_toRightOf="parent"/>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:padding="@dimen/half_padding"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/showType"/>
+
+</android.support.constraint.ConstraintLayout>

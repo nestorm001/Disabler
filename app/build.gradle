@@ -1,0 +1,85 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-android-extensions'
+
+static releaseTime() {
+    return new Date().format("yyyyMMdd", TimeZone.getTimeZone("UTC"))
+}
+
+def buildTime = new Date().format("yyyy-MM-dd'T'HH:mm'Z'", TimeZone.getTimeZone("UTC"))
+
+def commitHead = 'git rev-parse --short HEAD'.execute([], project.rootDir).text.trim()
+
+def versionMajor = 0
+def versionMinor = 1
+def versionPatch = 0
+def versionBuild = 0 // bump for dogfood builds, public betas, etc.
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId "com.github.nestorm001.disabler"
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode versionMajor * 1000000 + versionMinor * 10000 + versionPatch * 100 + versionBuild
+        versionName "${versionMajor}.${versionMinor}.${versionPatch}"
+        buildConfigField "String", "BUILD_TIME", "\"${buildTime}\""
+        buildConfigField "String", "COMMIT_HEAD", "\"${commitHead}\""
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    signingConfigs {
+        debug {}
+        release {}
+    }
+    buildTypes {
+        debug {
+            debuggable true
+            signingConfig signingConfigs.release
+        }
+        release {
+            minifyEnabled true
+            // 移除无用的resource文件
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            zipAlignEnabled true
+            debuggable false
+            signingConfig signingConfigs.release
+            applicationVariants.all { variant ->
+                variant.outputs.each { output ->
+                    def outputFile = output.outputFile
+                    if (outputFile != null && outputFile.name.endsWith('.apk')) {
+                        def fileName = "disabler_v${defaultConfig.versionName}_${releaseTime()}.apk"
+                        output.outputFile = new File(outputFile.parent, fileName)
+                    }
+                }
+            }
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile 'com.android.support:appcompat-v7:25.3.1'
+    compile 'com.android.support:recyclerview-v7:25.3.1'
+    testCompile 'junit:junit:4.12'
+
+    compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile "org.jetbrains.anko:anko-common:$anko_version"
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+}
+
+def props = new Properties()
+props.load(new FileInputStream(rootProject.file("release.properties")))
+android.signingConfigs.release.storeFile rootProject.file(props.keyStore)
+android.signingConfigs.release.storePassword props.keyStorePassword
+android.signingConfigs.release.keyAlias props.keyAlias
+android.signingConfigs.release.keyPassword props.keyAliasPassword

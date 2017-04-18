@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="@dimen/half_padding"
+        android:layout_marginLeft="@dimen/half_padding"
+        android:layout_marginTop="@dimen/half_padding"
+        android:contentDescription="@null"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@mipmap/ic_launcher"/>
+
+    <TextView
+        android:id="@+id/applicationNameText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/half_padding"
+        android:layout_marginRight="@dimen/half_padding"
+        android:layout_marginTop="@dimen/half_padding"
+        android:gravity="left|center"
+        android:maxLines="1"
+        android:textSize="15dp"
+        app:layout_constraintEnd_toStartOf="@+id/enableCheckBox"
+        app:layout_constraintStart_toEndOf="@+id/icon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="application name"/>
+
+    <TextView
+        android:id="@+id/packageNameText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/half_padding"
+        android:layout_marginLeft="@dimen/half_padding"
+        android:layout_marginRight="@dimen/half_padding"
+        android:layout_marginTop="@dimen/half_padding"
+        android:gravity="left|center"
+        android:maxLines="1"
+        android:textSize="13dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/enableCheckBox"
+        app:layout_constraintStart_toEndOf="@+id/icon"
+        app:layout_constraintTop_toBottomOf="@+id/applicationNameText"
+        tools:text="package name"/>
+
+    <CheckBox
+        android:id="@+id/enableCheckBox"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:padding="@dimen/half_padding"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+</android.support.constraint.ConstraintLayout>
