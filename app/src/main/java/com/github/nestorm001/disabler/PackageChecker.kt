@@ -6,27 +6,18 @@ import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.lang.Exception
 
-@FunctionalInterface
-interface Action {
-    fun execResult(resultValue: Int)
+fun Context.enablePackage(packageName: String, lambda: (Int) -> (Unit)?) {
+    exec("pm enable " + packageName, lambda)
 }
 
-fun Action(lambda: (Int) -> (Unit)): Action = object : Action {
-    override fun execResult(resultValue: Int) = lambda.invoke(resultValue)
+fun Context.disablePackage(packageName: String, lambda: (Int) -> (Unit)?) {
+    exec("pm disable " + packageName, lambda)
 }
 
-fun Context.enablePackage(packageName: String, action: Action? = null) {
-    exec("pm enable " + packageName, action)
-}
-
-fun Context.disablePackage(packageName: String, action: Action? = null) {
-    exec("pm disable " + packageName, action)
-}
-
-fun Context.exec(cmd: String, action: Action? = null) {
+fun Context.exec(cmd: String, lambda: (Int) -> (Unit)?) {
     doAsync {
         val process = Runtime.getRuntime().exec(arrayOf("su", "-c", cmd))
-        uiThread { action?.execResult(process.waitFor()) }
+        uiThread { lambda.invoke(process.waitFor()) }
     }
 }
 

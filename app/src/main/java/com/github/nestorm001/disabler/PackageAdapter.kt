@@ -30,7 +30,7 @@ class PackageAdapter(val context: Context, val list: List<ApplicationInfo>)
             enableCheckBox.isChecked = !info.enabled
             enableCheckBox.setOnClickListener {
                 info.enabled = !enableCheckBox.isChecked
-                val action: Action = Action {
+                val lambda: (Int) -> (Unit) = {
                     if (it == 1) {
                         context.toast("You need root permission to change " +
                                 "the state of the application")
@@ -39,9 +39,9 @@ class PackageAdapter(val context: Context, val list: List<ApplicationInfo>)
                     }
                 }
                 if (enableCheckBox.isChecked) {
-                    context.disablePackage(info.packageName, action)
+                    context.disablePackage(info.packageName, lambda)
                 } else {
-                    context.enablePackage(info.packageName, action)
+                    context.enablePackage(info.packageName, lambda)
                 }
             }
             setOnClickListener {

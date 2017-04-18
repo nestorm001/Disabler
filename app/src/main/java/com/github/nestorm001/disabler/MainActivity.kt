@@ -37,9 +37,7 @@ class MainActivity : AppCompatActivity() {
     private fun setList(withSystemApp: Boolean = false) {
         doAsync {
             val appList = getList(withSystemApp)
-            uiThread {
-                list.adapter = PackageAdapter(this@MainActivity, appList)
-            }
+            uiThread { list.adapter = PackageAdapter(this@MainActivity, appList) }
         }
     }
 
