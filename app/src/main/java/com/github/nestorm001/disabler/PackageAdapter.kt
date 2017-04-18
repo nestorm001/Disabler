@@ -28,16 +28,17 @@ class PackageAdapter(val context: Context, val list: List<ApplicationInfo>)
             applicationNameText.text = packageManager.getApplicationLabel(info)
             icon.setImageDrawable(packageManager.getApplicationIcon(info))
             enableCheckBox.isChecked = !info.enabled
+            val lambda = { result: Int ->
+                if (result == 1) {
+                    context.toast("You need root permission to change " +
+                            "the state of the application")
+                    info.enabled = !info.enabled
+                    enableCheckBox.isChecked = !enableCheckBox.isChecked
+                }
+            }
             enableCheckBox.setOnClickListener {
                 info.enabled = !enableCheckBox.isChecked
-                val lambda: (Int) -> (Unit) = {
-                    if (it == 1) {
-                        context.toast("You need root permission to change " +
-                                "the state of the application")
-                        info.enabled = !info.enabled
-                        enableCheckBox.isChecked = !enableCheckBox.isChecked
-                    }
-                }
+
                 if (enableCheckBox.isChecked) {
                     context.disablePackage(info.packageName, lambda)
                 } else {
