@@ -2,26 +2,41 @@ package com.github.nestorm001.disabler
 
 import android.content.Context
 import android.content.Intent
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 import java.io.DataOutputStream
 import java.lang.Exception
 
-fun enablePackage(packageName: String) {
-    exec("pm enable " + packageName)
+@FunctionalInterface
+interface Action {
+    fun execResult(resultValue: Int)
 }
 
-fun disablePackage(packageName: String) {
-    exec("pm disable " + packageName)
+fun Action(lambda: (Int) -> (Unit)): Action = object : Action {
+    override fun execResult(resultValue: Int) = lambda.invoke(resultValue)
 }
 
-fun exec(cmd: String) {
-    try {
-        val process = Runtime.getRuntime().exec("su")
-        val request = DataOutputStream(process.outputStream)
-        request.write(cmd.toByteArray())
-        request.flush()
-        request.close()
-    } catch (e: Exception) {
-        e.printStackTrace()
+fun Context.enablePackage(packageName: String, action: Action? = null) {
+    exec("pm enable " + packageName, action)
+}
+
+fun Context.disablePackage(packageName: String, action: Action? = null) {
+    exec("pm disable " + packageName, action)
+}
+
+fun Context.exec(cmd: String, action: Action? = null) {
+    doAsync {
+        try {
+            val process = Runtime.getRuntime().exec(arrayOf("su", "-c", cmd))
+            val request = DataOutputStream(process.outputStream)
+            request.flush()
+            process.waitFor()
+            uiThread {
+                action?.execResult(process.exitValue())
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 }
 
