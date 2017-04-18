@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
-import java.io.DataOutputStream
 import java.lang.Exception
 
 @FunctionalInterface
@@ -26,17 +25,8 @@ fun Context.disablePackage(packageName: String, action: Action? = null) {
 
 fun Context.exec(cmd: String, action: Action? = null) {
     doAsync {
-        try {
-            val process = Runtime.getRuntime().exec(arrayOf("su", "-c", cmd))
-            val request = DataOutputStream(process.outputStream)
-            request.flush()
-            process.waitFor()
-            uiThread {
-                action?.execResult(process.exitValue())
-            }
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        val process = Runtime.getRuntime().exec(arrayOf("su", "-c", cmd))
+        uiThread { action?.execResult(process.waitFor()) }
     }
 }
 

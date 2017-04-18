@@ -48,7 +48,8 @@ class PackageAdapter(val context: Context, val list: List<ApplicationInfo>)
                 if (info.enabled) {
                     context.openApp(info.packageName)
                 } else {
-                    context.toast("To launch the application, you should enable the application first")
+                    context.toast("To launch the application, you should " +
+                            "enable the application first")
                 }
             }
         }
