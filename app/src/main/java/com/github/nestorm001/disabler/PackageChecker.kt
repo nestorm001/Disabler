@@ -16,8 +16,8 @@ fun Context.disablePackage(packageName: String, lambda: (Int) -> (Unit)?) {
 
 fun Context.exec(cmd: String, lambda: (Int) -> (Unit)?) {
     doAsync {
-        val process = Runtime.getRuntime().exec(arrayOf("su", "-c", cmd))
-        uiThread { lambda.invoke(process.waitFor()) }
+        val result = Runtime.getRuntime().exec(arrayOf("su", "-c", cmd)).waitFor()
+        uiThread { lambda.invoke(result) }
     }
 }
 
