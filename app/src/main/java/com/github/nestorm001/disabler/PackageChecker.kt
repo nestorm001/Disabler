@@ -22,11 +22,10 @@ fun Context.exec(cmd: String, lambda: (Int) -> (Unit)?) {
 }
 
 fun Context.openApp(packageName: String) {
-    val manager = this.packageManager
     try {
-        val i = manager.getLaunchIntentForPackage(packageName)
-        i.addCategory(Intent.CATEGORY_LAUNCHER)
-        this.startActivity(i)
+        startActivity(packageManager
+                .getLaunchIntentForPackage(packageName)
+                .addCategory(Intent.CATEGORY_LAUNCHER))
     } catch (e: Exception) {
         e.printStackTrace()
     }
