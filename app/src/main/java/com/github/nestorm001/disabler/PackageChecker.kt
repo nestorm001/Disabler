@@ -28,5 +28,6 @@ fun Context.openApp(packageName: String) {
                 .addCategory(Intent.CATEGORY_LAUNCHER))
     } catch (e: Exception) {
         e.printStackTrace()
+        toast("Cannot launch this application")
     }
 }
