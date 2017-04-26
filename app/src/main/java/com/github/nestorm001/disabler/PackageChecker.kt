@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
+import java.io.IOException
 import java.lang.Exception
 
 fun Context.enablePackage(packageName: String, lambda: (Int) -> (Unit)?) {
@@ -16,7 +17,12 @@ fun Context.disablePackage(packageName: String, lambda: (Int) -> (Unit)?) {
 
 fun Context.exec(cmd: String, lambda: (Int) -> (Unit)?) {
     doAsync {
-        val result = Runtime.getRuntime().exec(arrayOf("su", "-c", cmd)).waitFor()
+        var result: Int = 1
+        try {
+            result = ProcessBuilder("su", "-c", cmd).start().waitFor()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
         uiThread { lambda.invoke(result) }
     }
 }
