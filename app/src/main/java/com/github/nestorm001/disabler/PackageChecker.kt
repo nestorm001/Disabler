@@ -15,11 +15,23 @@ fun Context.disablePackage(packageName: String, lambda: (Int) -> (Unit)?) {
     exec("pm disable " + packageName, lambda)
 }
 
-fun Context.exec(cmd: String, lambda: (Int) -> (Unit)?) {
+fun Context.hidePackage(packageName: String, lambda: (Int) -> (Unit)?) {
+    exec("pm hide " + packageName, lambda, needSu = false)
+}
+
+fun Context.unhidePackage(packageName: String, lambda: (Int) -> (Unit)?) {
+    exec("pm unhide " + packageName, lambda, needSu = false)
+}
+
+fun Context.exec(cmd: String, lambda: (Int) -> (Unit)?, needSu: Boolean = true) {
     doAsync {
         var result: Int = 1
         try {
-            result = ProcessBuilder("su", "-c", cmd).start().waitFor()
+            if (needSu) {
+                result = ProcessBuilder("su", "-c", cmd).start().waitFor()
+            } else {
+                result = ProcessBuilder(cmd).start().waitFor()
+            }
         } catch (e: IOException) {
             e.printStackTrace()
         }
